@@ -3,14 +3,9 @@
         <div class="max-w-md w-full space-y-8">
             <div>
                 <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" />
-                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
-                <p class="mt-2 text-center text-sm text-gray-600">
-                    Or
-                    {{ ' ' }}
-                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> start your 14-day free trial </a>
-                </p>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Register</h2>
             </div>
-            <form class="mt-8 space-y-6" @submit.prevent="Login" method="POST">
+            <form class="mt-8 space-y-6" @submit.prevent="Register" method="POST">
                 <input type="hidden" name="remember" value="true" />
                 <div class="rounded-md shadow-sm -space-y-px">
                     <div>
@@ -39,11 +34,25 @@
                             placeholder="Password"
                         />
                     </div>
+                    <div>
+                        <label for="password-confirm" class="sr-only">Password (confirm)</label>
+                        <input
+                            v-model="passwordConfirm"
+                            id="password-confirm"
+                            name="password-confirm"
+                            type="password"
+                            autocomplete="current-password"
+                            required
+                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                            placeholder="Password (confirm)"
+                        />
+                    </div>
                 </div>
 
-                <div class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+                <div v-if="errorMessage" class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
                     {{ errorMessage }}
                 </div>
+
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
                         <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
@@ -55,15 +64,6 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-center">
-                    <div class="text-sm">
-                        <p>
-                            Need an account?
-                            <router-link :to="{ name: 'Register' }" class="font-medium text-indigo-600 hover:text-indigo-500"> Register here </router-link>
-                        </p>
-                    </div>
-                </div>
-
                 <div>
                     <button
                         type="submit"
@@ -72,7 +72,7 @@
                         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                             <LockClosedIcon class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
                         </span>
-                        Sign in
+                        Register
                     </button>
                 </div>
             </form>
@@ -81,26 +81,26 @@
 </template>
 
 <script setup lang="ts">
-import { getAuth, signInWithEmailAndPassword } from '@firebase/auth'
 import { LockClosedIcon } from '@heroicons/vue/solid'
-import { ref } from 'vue'
+import { getAuth, createUserWithEmailAndPassword } from '@firebase/auth'
+import { ref } from '@vue/reactivity'
 
 const email = ref('')
 const password = ref('')
-
+const passwordConfirm = ref('')
 const errorMessage = ref('')
 
-const Login = () => {
+const Register = async () => {
     const auth = getAuth()
-    signInWithEmailAndPassword(auth, email.value, password.value)
-        .then((userCredential) => {
-            console.log('userCredential', userCredential)
-        })
-        .catch((error) => {
-            console.log('error', error)
-            // const errorMessage = error.message;
-            errorMessage.value = error.message
-            alert(error.message)
-        })
+    try {
+        if (password.value !== passwordConfirm.value) {
+            throw new Error('Passwords are not the same')
+        }
+
+        const user = await createUserWithEmailAndPassword(auth, email.value, password.value)
+        console.log(user)
+    } catch (err) {
+        errorMessage.value = (err as Error).message
+    }
 }
 </script>
