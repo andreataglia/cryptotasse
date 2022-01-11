@@ -176,7 +176,7 @@ import { onBeforeMount, ref } from 'vue'
 import { Dialog, DialogOverlay, Menu, MenuButton, MenuItem, MenuItems, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { BellIcon, CalendarIcon, ChartBarIcon, FolderIcon, HomeIcon, InboxIcon, MenuAlt2Icon, UsersIcon, XIcon } from '@heroicons/vue/outline'
 import { SearchIcon } from '@heroicons/vue/solid'
-// import GuestsTable from '../components/GuestsTable.vue'
+import GuestsTable from '../components/GuestsTable.vue'
 import { getAuth } from '@firebase/auth'
 
 const name = ref('')
