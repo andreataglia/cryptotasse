@@ -143,6 +143,9 @@
                                 leave-to-class="transform opacity-0 scale-95"
                             >
                                 <MenuItems class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <MenuItem>
+                                        <a class="block px-4 py-2 text-sm text-gray-700">Welcome, {{ name }}</a>
+                                    </MenuItem>
                                     <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
                                         <a @click="item.method" :href="item.href" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}</a>
                                     </MenuItem>
@@ -198,15 +201,15 @@ const Logout = () => {
 
 const navigation = [
     { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-    { name: 'Team', href: '#', icon: UsersIcon, current: false },
-    { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-    { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-    { name: 'Documents', href: '#', icon: InboxIcon, current: false },
-    { name: 'Reports', href: '#', icon: ChartBarIcon, current: false },
+    // { name: 'Team', href: '#', icon: UsersIcon, current: false },
+    // { name: 'Projects', href: '#', icon: FolderIcon, current: false },
+    // { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
+    // { name: 'Documents', href: '#', icon: InboxIcon, current: false },
+    // { name: 'Reports', href: '#', icon: ChartBarIcon, current: false },
 ]
 const userNavigation = [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
+    // { name: 'Your Profile', href: '#' },
+    // { name: 'Settings', href: '#' },
     { name: 'Sign out', href: '#', method: Logout },
 ]
 </script>
