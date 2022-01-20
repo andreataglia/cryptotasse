@@ -30,7 +30,7 @@
                             type="password"
                             autocomplete="current-password"
                             required
-                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                             placeholder="Password"
                         />
                     </div>
@@ -51,17 +51,6 @@
 
                 <div v-if="errorMessage" class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
                     {{ errorMessage }}
-                </div>
-
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
-                        <label for="remember-me" class="ml-2 block text-sm text-gray-900"> Remember me </label>
-                    </div>
-
-                    <div class="text-sm">
-                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> Forgot your password? </a>
-                    </div>
                 </div>
 
                 <div>

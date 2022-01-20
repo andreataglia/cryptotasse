@@ -29,11 +29,13 @@ const mockGuestOnUser = (hostId) => {
     const lastName = faker.name.lastName()
 
     const step = faker.random.arrayElement([1, 2, 3])
+    const benefit = faker.random.arrayElement(['energy', 'fatloss', 'focus'])
     const social = { mostUsed: faker.random.arrayElement(['Facebook', 'Instagram', 'Tik tok', 'Twitter']) }
 
     return {
         hid: hostId,
         step,
+        benefit,
         firstName,
         lastName,
         social,
@@ -41,7 +43,6 @@ const mockGuestOnUser = (hostId) => {
         email: faker.internet.email(firstName, lastName),
         cellphone: faker.phone.phoneNumber(),
         date: new Date(),
-        image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
         note: '',
     }
 }

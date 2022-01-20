@@ -29,7 +29,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const user = getAuth().currentUser
-    if (to.name !== 'HostLogin' && !user) next({ name: 'HostLogin' })
+    if (to.name !== 'HostLogin' && to.name !== 'Register' && !user) next({ name: 'HostLogin' })
     else next()
 })
 
