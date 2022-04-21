@@ -159,12 +159,25 @@
             <main class="flex-1">
                 <div class="py-6">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-                        <h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
+                        <h1 class="text-2xl font-semibold text-gray-900">Calcola i valori dell'RW</h1>
                     </div>
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                         <!-- Replace with your content -->
                         <div class="py-4">
-                            <GuestsTable />
+                            Carica i csv esportati da app crypto.com
+                            <input type="file" id="dealCsv" />
+                        </div>
+                        Bilancio su crypto.com App al 31/12/2021:
+                        <ul>
+                            <li v-for="(v, k) in balances">{{ k }}: {{ v }}</li>
+                        </ul>
+                        <div class="p-4 bg-red-200">Cashout: {{ cashout }}</div>
+                        <div class="p-4 bg-slate-200">Valore Iniziale: {{ valoreIniziale }}</div>
+                        <div class="p-4 bg-slate-200">Valore Finale: {{ valoreFinale }}</div>
+
+                        <div>
+                            Da dove provengono i soldi? Dove sono stati inviati? Quale andamento hanno avuto? Sono stati monitorati gli investimenti? Sono stati rilevati i prelievi in RT? E’ stata
+                            pagata l’imposta sostitutiva?
                         </div>
                         <!-- /End replace -->
                     </div>
@@ -175,7 +188,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { Dialog, DialogOverlay, Menu, MenuButton, MenuItem, MenuItems, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { BellIcon, CalendarIcon, ChartBarIcon, FolderIcon, HomeIcon, InboxIcon, MenuAlt2Icon, UsersIcon, XIcon } from '@heroicons/vue/outline'
 import { SearchIcon } from '@heroicons/vue/solid'
@@ -185,18 +198,104 @@ import { getAuth } from '@firebase/auth'
 const name = ref('')
 const sidebarOpen = ref(false)
 
-onBeforeMount(() => {
-    const user = getAuth().currentUser
-    if (user && user.email) {
-        name.value = user.email
+onMounted(() => {
+    function uploadDealcsv() {}
+
+    /*------ Method for read uploded csv file ------*/
+    uploadDealcsv.prototype.getCsv = function (e) {
+        let input = document.getElementById('dealCsv')
+        input.addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                var myFile = this.files[0]
+                var reader = new FileReader()
+
+                reader.addEventListener('load', function (e) {
+                    let csvdata = e.target.result
+                    parseCsv.getParsecsvdata(csvdata) // calling function for parse csv data
+                })
+
+                reader.readAsBinaryString(myFile)
+            }
+        })
     }
+    /*------- Method for parse csv data and display --------------*/
+    uploadDealcsv.prototype.getParsecsvdata = function (data) {
+        let parsedata = []
+
+        let newLinebrk = data.split('\n')
+        for (let i = 0; i < newLinebrk.length; i++) {
+            parsedata.push(newLinebrk[i].split(','))
+        }
+        provaCsv(parsedata)
+        calculateFinalValues()
+
+        console.log(parsedata)
+        console.table(parsedata)
+    }
+    var parseCsv = new uploadDealcsv()
+    parseCsv.getCsv()
 })
 
-const Logout = () => {
-    getAuth()
-        .signOut()
-        .then(() => console.log('signed out'))
-        .catch((err) => console.log('err', err))
+const balances = ref<Record<string, number>>({
+    EUR: 0,
+})
+const cashout = ref(0)
+const valoreIniziale = ref(0)
+const valoreFinale = ref(0)
+
+const provaCsv = (data: any[]) => {
+    for (const raw of data) {
+        processRaw(raw)
+    }
+}
+
+const processRaw = (row: string[]) => {
+    switch (row[9]) {
+        case 'viban_purchase': // acquisto di crypto da fiat wallet
+        case 'crypto_exchange': // trade tra crypto
+            setInitialValueIfNone(row[2])
+            setInitialValueIfNone(row[4])
+            balances.value[row[2]] += parseFloat(row[3])
+            balances.value[row[4]] += parseFloat(row[5])
+            return
+        case 'crypto_purchase': // acquisto di crypto con carta
+            setInitialValueIfNone(row[2])
+            balances.value[row[2]] += parseFloat(row[3])
+            balances.value['EUR'] -= parseFloat(row[7])
+            return
+        case 'crypto_viban_exchange': // vendita crypto per eur su fiat wallet
+            setInitialValueIfNone(row[2])
+            balances.value[row[2]] += parseFloat(row[3])
+            cashout.value += parseFloat(row[5])
+            return
+        case 'crypto_withdrawal': // withdraw crypto su wallet fuori
+        case 'crypto_deposit': // deposito da fuori a wallet crypto
+        case 'crypto_transfer':
+            setInitialValueIfNone(row[2])
+            balances.value[row[2]] += parseFloat(row[3])
+            return
+        default:
+            return
+    }
+}
+
+const setInitialValueIfNone = (key: string) => {
+    if (!balances.value[key]) {
+        balances.value[key] = 0
+    }
+}
+
+const calculateFinalValues = () => {
+    valoreIniziale.value = -balances.value['EUR']
+    Object.keys(balances.value).forEach((k) => {
+        if (k === 'EUR') return
+        valoreFinale.value += getFinalYearPriceForToken(k, balances.value[k])
+    })
+}
+
+const getFinalYearPriceForToken = (token: string, value: number) => {
+    const price = 1 // TODO fetch from API
+    return value * price
 }
 
 const navigation = [
@@ -209,7 +308,6 @@ const navigation = [
 ]
 const userNavigation = [
     // { name: 'Your Profile', href: '#' },
-    // { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#', method: Logout },
+    { name: 'Settings', href: '#' },
 ]
 </script>

@@ -10,27 +10,11 @@ const routes = [
         name: 'DashboardHome',
         component: DashboardHome,
     },
-    {
-        path: '/login',
-        name: 'HostLogin',
-        component: HostLogin,
-    },
-    {
-        path: '/register',
-        name: 'Register',
-        component: Register,
-    },
 ]
 
 const router = createRouter({
     history: createWebHistory(),
     routes,
-})
-
-router.beforeEach((to, from, next) => {
-    const user = getAuth().currentUser
-    if (to.name !== 'HostLogin' && to.name !== 'Register' && !user) next({ name: 'HostLogin' })
-    else next()
 })
 
 export default router
