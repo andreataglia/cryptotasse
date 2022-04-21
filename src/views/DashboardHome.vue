@@ -147,7 +147,7 @@
                                         <a class="block px-4 py-2 text-sm text-gray-700">Welcome, {{ name }}</a>
                                     </MenuItem>
                                     <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                                        <a @click="item.method" :href="item.href" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}</a>
+                                        <a :href="item.href" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}</a>
                                     </MenuItem>
                                 </MenuItems>
                             </transition>
@@ -202,14 +202,17 @@ onMounted(() => {
     function uploadDealcsv() {}
 
     /*------ Method for read uploded csv file ------*/
-    uploadDealcsv.prototype.getCsv = function (e) {
+    uploadDealcsv.prototype.getCsv = function (e: any) {
         let input = document.getElementById('dealCsv')
-        input.addEventListener('change', function () {
+        input!.addEventListener('change', function () {
+            // @ts-ignore
             if (this.files && this.files[0]) {
+                // @ts-ignore
                 var myFile = this.files[0]
                 var reader = new FileReader()
 
                 reader.addEventListener('load', function (e) {
+                    // @ts-ignore
                     let csvdata = e.target.result
                     parseCsv.getParsecsvdata(csvdata) // calling function for parse csv data
                 })
@@ -219,7 +222,7 @@ onMounted(() => {
         })
     }
     /*------- Method for parse csv data and display --------------*/
-    uploadDealcsv.prototype.getParsecsvdata = function (data) {
+    uploadDealcsv.prototype.getParsecsvdata = function (data: any) {
         let parsedata = []
 
         let newLinebrk = data.split('\n')
@@ -232,6 +235,7 @@ onMounted(() => {
         console.log(parsedata)
         console.table(parsedata)
     }
+    // @ts-ignore
     var parseCsv = new uploadDealcsv()
     parseCsv.getCsv()
 })
