@@ -84,7 +84,6 @@
 import { getAuth } from 'firebase/auth'
 import { onSnapshot, Unsubscribe } from 'firebase/firestore'
 import { onBeforeMount, ref } from 'vue'
-import { getGuestsQueryByHostId } from '../services/guest'
 import { Guest, isGuest, Step } from '../types'
 import AddNote from './AddNote.vue'
 
@@ -110,25 +109,4 @@ const handleAddNote = (guest: Guest) => {
     currentGuest.value = guest
     open.value = true
 }
-
-onBeforeMount(async () => {
-    const user = getAuth().currentUser
-    let unsubscribe: Unsubscribe | undefined
-
-    if (user) {
-        unsubscribe = onSnapshot(getGuestsQueryByHostId(user.uid), (querySnapshot) => {
-            const updatedGuests: Guest[] = []
-            querySnapshot.docs.forEach((doc) => {
-                const guest = { id: doc.id, ...doc.data(), date: new Date(doc.data().date.seconds * 1000) }
-                if (isGuest(guest)) {
-                    updatedGuests.push(guest)
-                }
-            })
-
-            guestList.value = updatedGuests
-        })
-    } else {
-        unsubscribe && unsubscribe()
-    }
-})
 </script>

@@ -98,7 +98,6 @@ import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } f
 import { ExclamationIcon, PencilIcon, CheckIcon } from '@heroicons/vue/outline'
 import { Guest } from '../types'
 import { doc, updateDoc } from 'firebase/firestore'
-import { db } from '../firebase'
 
 const props = defineProps<{
     modelValue: boolean
@@ -113,16 +112,7 @@ const noteText = ref(props.guest.note)
 const onEdit = ref(false)
 const guestObject = ref(props.guest)
 
-const updateNote = async (guestId: string) => {
-    try {
-        const response = await updateDoc(doc(db, 'guests', guestId), { note: noteText.value })
-        console.log('response', response)
-        guestObject.value.note = noteText.value
-        onEdit.value = false
-    } catch (error) {
-        console.log('error', error)
-    }
-}
+const updateNote = async (guestId: string) => {}
 
 const showDialog = (value: boolean) => {
     emits('update:modelValue', value)
