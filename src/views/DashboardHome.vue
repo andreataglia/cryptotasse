@@ -164,11 +164,11 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                         <!-- Replace with your content -->
                         <div class="py-4">
-                            Carica i csv esportati da app crypto.com
+                            Carica i csv di un anno, esportati da app crypto.com
                             <input type="file" id="dealCsv" />
                         </div>
-                        Bilancio su crypto.com App al 31/12/2021:
-                        <ul>
+                        Bilancio su crypto.com App a fine anno (dovrebbe essere se hai caricato tutto il 2022 31/12/2022):
+                        <ul class="my-3 text-gray-800">
                             <li v-for="(v, k) in balances">{{ k }}: {{ v }}</li>
                         </ul>
                         <div class="p-4 bg-red-200">Cashout: {{ cashout }}</div>
@@ -192,8 +192,6 @@ import { onBeforeMount, onMounted, ref } from 'vue'
 import { Dialog, DialogOverlay, Menu, MenuButton, MenuItem, MenuItems, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { BellIcon, CalendarIcon, ChartBarIcon, FolderIcon, HomeIcon, InboxIcon, MenuAlt2Icon, UsersIcon, XIcon } from '@heroicons/vue/outline'
 import { SearchIcon } from '@heroicons/vue/solid'
-import GuestsTable from '../components/GuestsTable.vue'
-import { getAuth } from '@firebase/auth'
 
 const name = ref('')
 const sidebarOpen = ref(false)
@@ -231,9 +229,6 @@ onMounted(() => {
         }
         provaCsv(parsedata)
         calculateFinalValues()
-
-        console.log(parsedata)
-        console.table(parsedata)
     }
     // @ts-ignore
     var parseCsv = new uploadDealcsv()
@@ -294,24 +289,32 @@ const calculateFinalValues = () => {
     Object.keys(balances.value).forEach((k) => {
         if (k === 'EUR') return
         valoreFinale.value += getFinalYearPriceForToken(k, balances.value[k])
+        console.log('token ', k)
     })
 }
 
-const getFinalYearPriceForToken = (token: string, value: number) => {
-    const price = 1 // TODO fetch from API
-    return value * price
+const getFinalYearPriceForToken = (token: string, amount: number) => {
+    let price = 1
+    switch (token) {
+        case 'BTC':
+            price = 16000
+            break
+        case 'CRO':
+            price = 0.05
+            break
+        case 'CRO':
+            price = 0.8
+            break
+        case 'ETH':
+            price = 1150
+            break
+        default:
+            price = 1
+            break
+    }
+    return amount * price
 }
 
-const navigation = [
-    { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-    // { name: 'Team', href: '#', icon: UsersIcon, current: false },
-    // { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-    // { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-    // { name: 'Documents', href: '#', icon: InboxIcon, current: false },
-    // { name: 'Reports', href: '#', icon: ChartBarIcon, current: false },
-]
-const userNavigation = [
-    // { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-]
+const navigation = [{ name: 'Dashboard', href: '#', icon: HomeIcon, current: true }]
+const userNavigation = [{ name: 'Settings', href: '#' }]
 </script>
