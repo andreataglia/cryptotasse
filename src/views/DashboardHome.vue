@@ -43,9 +43,7 @@
                                 </button>
                             </div>
                         </TransitionChild>
-                        <div class="flex-shrink-0 flex items-center px-4">
-                            <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg" alt="Workflow" />
-                        </div>
+                        <div class="flex-shrink-0 flex items-center px-4">Crypto.com Taxes</div>
                         <div class="mt-5 flex-1 h-0 overflow-y-auto">
                             <nav class="px-2 space-y-1">
                                 <a
@@ -74,9 +72,7 @@
         <div class="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
             <!-- Sidebar component, swap this element with another sidebar if you like -->
             <div class="flex-1 flex flex-col min-h-0 bg-gray-800">
-                <div class="flex items-center h-16 flex-shrink-0 px-4 bg-gray-900">
-                    <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg" alt="Workflow" />
-                </div>
+                <div class="flex items-center h-16 flex-shrink-0 px-4 bg-gray-900 text-blue-400 font-extrabold">Crypto.com Taxes</div>
                 <div class="flex-1 flex flex-col overflow-y-auto">
                     <nav class="flex-1 px-2 py-4 space-y-1">
                         <a
@@ -116,43 +112,6 @@
                             </div>
                         </form>
                     </div>
-                    <div class="ml-4 flex items-center md:ml-6">
-                        <button type="button" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            <span class="sr-only">View notifications</span>
-                            <BellIcon class="h-6 w-6" aria-hidden="true" />
-                        </button>
-
-                        <!-- Profile dropdown -->
-                        <Menu as="div" class="ml-3 relative">
-                            <div>
-                                <MenuButton class="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    <span class="sr-only">Open user menu</span>
-                                    <img
-                                        class="h-8 w-8 rounded-full"
-                                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                        alt=""
-                                    />
-                                </MenuButton>
-                            </div>
-                            <transition
-                                enter-active-class="transition ease-out duration-100"
-                                enter-from-class="transform opacity-0 scale-95"
-                                enter-to-class="transform opacity-100 scale-100"
-                                leave-active-class="transition ease-in duration-75"
-                                leave-from-class="transform opacity-100 scale-100"
-                                leave-to-class="transform opacity-0 scale-95"
-                            >
-                                <MenuItems class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                    <MenuItem>
-                                        <a class="block px-4 py-2 text-sm text-gray-700">Welcome, {{ name }}</a>
-                                    </MenuItem>
-                                    <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                                        <a :href="item.href" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}</a>
-                                    </MenuItem>
-                                </MenuItems>
-                            </transition>
-                        </Menu>
-                    </div>
                 </div>
             </div>
 
@@ -167,7 +126,7 @@
                             Carica i csv di un anno, esportati da app crypto.com
                             <input type="file" id="dealCsv" />
                         </div>
-                        Bilancio su crypto.com App a fine anno (dovrebbe essere se hai caricato tutto il 2022 31/12/2022):
+                        Bilancio su crypto.com App a fine anno (dovrebbe essere se hai caricato tutto il 2023 31/12/2023):
                         <ul class="my-3 text-gray-800">
                             <li v-for="(v, k) in balances">{{ k }}: {{ v }}</li>
                         </ul>
@@ -297,19 +256,16 @@ const getFinalYearPriceForToken = (token: string, amount: number) => {
     let price = 1
     switch (token) {
         case 'BTC':
-            price = 16000
+            price = 42000
             break
         case 'CRO':
-            price = 0.05
-            break
-        case 'CRO':
-            price = 0.8
+            price = 0.09
             break
         case 'ETH':
-            price = 1150
+            price = 2200
             break
-        default:
-            price = 1
+        default: // token not found
+            price = 0
             break
     }
     return amount * price
